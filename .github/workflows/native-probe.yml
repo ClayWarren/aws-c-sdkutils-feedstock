@@ -1,7 +1,7 @@
 name: aws-c-sdkutils native Windows ARM64
 on:
   push:
-    branches: [codex/aws-sdkutils-arm64-probe]
+    branches: [codex/aws-sdkutils-pinned-arm64-probe]
 permissions:
   contents: read
   actions: read
