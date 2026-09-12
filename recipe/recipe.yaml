@@ -13,7 +13,7 @@ source:
   sha256: 23bfb010c7a5becc48b7e36212a4f401319a46ec3e981eb9adb9d6b215e7a65e
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -36,6 +36,22 @@ tests:
         then:
           - if not exist %LIBRARY_INC%\\aws\\sdkutils\\sdkutils.h exit 1
           - if not exist %PREFIX%\\Library\\bin\\aws-c-sdkutils.dll exit 1
+  - if: win and arm64
+    then:
+      requirements:
+        run:
+          - ${{ compiler('c') }}
+          - cmake
+      files:
+        recipe:
+          - CMakeLists.txt
+          - consumer.c
+      script:
+        - cmake -S . -B consumer-build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%"
+        - cmake --build consumer-build
+        - consumer-build\sdkutils_consumer.exe
+        - dumpbin /headers "%LIBRARY_BIN%\aws-c-sdkutils.dll" | findstr /I /C:"AA64 machine (ARM64)"
+        - dumpbin /headers consumer-build\sdkutils_consumer.exe | findstr /I /C:"AA64 machine (ARM64)"
 about:
   license: Apache-2.0
   license_file: LICENSE
@@ -44,6 +60,7 @@ about:
   repository: https://github.com/awslabs/aws-c-sdkutils
 
 extra:
+  feedstock-name: aws-c-sdkutils
   recipe-maintainers:
     - xhochy
     - conda-forge/aws-sdk-cpp
