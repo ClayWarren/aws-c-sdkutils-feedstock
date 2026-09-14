@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.15)
-project(sdkutils_consumer LANGUAGES C)
-find_package(aws-c-sdkutils CONFIG REQUIRED)
-add_executable(sdkutils_consumer consumer.c)
-target_link_libraries(sdkutils_consumer PRIVATE AWS::aws-c-sdkutils)
